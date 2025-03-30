@@ -19,6 +19,7 @@ class Genre(db.Model):
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
+    author = db.Column(db.String(100))
     pages = db.Column(db.Integer)
     genre_id = db.Column(db.Integer, db.ForeignKey('genre.id'))
     genre = db.relationship('Genre')
@@ -40,9 +41,10 @@ def index():
 @app.route('/add_book', methods=['POST'])
 def add_book():
     title = request.form['title']
+    author = request.form['author']
     pages = int(request.form['pages'])
     genre_id = int(request.form['genre'])
-    new_book = Book(title=title, pages=pages, genre_id=genre_id)
+    new_book = Book(title=title, author=author, pages=pages, genre_id=genre_id)
     db.session.add(new_book)
     db.session.commit()
     return redirect('/')
@@ -52,6 +54,7 @@ def edit_book():
     book_id = int(request.form['book_id'])
     book = Book.query.get_or_404(book_id)
     book.title = request.form['title']
+    book.author = request.form['author']
     book.pages = int(request.form['pages'])
     book.genre_id = int(request.form['genre'])
     db.session.commit()
@@ -90,5 +93,26 @@ def report():
     result = db.session.execute(stmt, {'start': start, 'end': end}).fetchall()
     return render_template('report.html', result=result)
 
+@app.route('/books_by_genre')
+def books_by_genre():
+    genre = request.args.get('genre')
+    stmt = text("""
+        SELECT b.title FROM book b
+        JOIN genre g ON b.genre_id = g.id
+        WHERE g.name = :genre
+    """)
+    result = db.session.execute(stmt, {'genre': genre}).fetchall()
+    return jsonify([row.title for row in result])
+
+@app.route('/books_by_author')
+def books_by_author():
+    author = request.args.get('author')
+    stmt = text("""
+        SELECT title FROM book WHERE author = :author
+    """)
+    result = db.session.execute(stmt, {'author': author}).fetchall()
+    return jsonify([row.title for row in result])
+
 if __name__ == '__main__':
     app.run(debug=True)
+

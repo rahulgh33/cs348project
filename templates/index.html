@@ -9,6 +9,7 @@
   <h2>Add Book</h2>
   <form action="/add_book" method="post">
     <input name="title" placeholder="Title" required><br>
+    <input name="author" placeholder="Author" required><br>
     <input name="pages" type="number" placeholder="Total Pages" required><br>
     <select name="genre" required>
       {% for genre in genres %}
@@ -26,6 +27,7 @@
       {% endfor %}
     </select><br>
     <input name="title" placeholder="New Title" required><br>
+    <input name="author" placeholder="New Author" required><br>
     <input name="pages" type="number" placeholder="New Total Pages" required><br>
     <select name="genre" required>
       {% for genre in genres %}
@@ -63,5 +65,44 @@
     <input type="date" name="end" required>
     <button type="submit">Generate Report</button>
   </form>
+
+  <h2>Books by Genre</h2>
+  <form onsubmit="fetchByGenre(event)">
+    <select id="genre-query">
+      {% for genre in genres %}
+        <option>{{ genre.name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Show Books</button>
+  </form>
+  <ul id="genre-books"></ul>
+
+  <h2>Books by Author</h2>
+  <form onsubmit="fetchByAuthor(event)">
+    <input id="author-query" placeholder="Author name" required>
+    <button type="submit">Show Books</button>
+  </form>
+  <ul id="author-books"></ul>
+
+  <script>
+    async function fetchByGenre(event) {
+      event.preventDefault();
+      const genre = document.getElementById('genre-query').value;
+      const res = await fetch(`/books_by_genre?genre=${encodeURIComponent(genre)}`);
+      const books = await res.json();
+      const list = document.getElementById('genre-books');
+      list.innerHTML = books.map(b => `<li>${b}</li>`).join('');
+    }
+
+    async function fetchByAuthor(event) {
+      event.preventDefault();
+      const author = document.getElementById('author-query').value;
+      const res = await fetch(`/books_by_author?author=${encodeURIComponent(author)}`);
+      const books = await res.json();
+      const list = document.getElementById('author-books');
+      list.innerHTML = books.map(b => `<li>${b}</li>`).join('');
+    }
+  </script>
 </body>
 </html>
+
