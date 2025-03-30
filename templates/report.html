@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reading Report</title>
+</head>
+<body>
+  <h1>📊 Reading Report</h1>
+  <a href="/">← Back</a>
+  <table border="1" cellpadding="5">
+    <tr>
+      <th>Book Title</th>
+      <th>Total Pages Read</th>
+      <th>Log Entries</th>
+      <th>Avg Pages/Day</th>
+    </tr>
+    {% for row in result %}
+      <tr>
+        <td>{{ row.title }}</td>
+        <td>{{ row.total_pages }}</td>
+        <td>{{ row.log_count }}</td>
+        <td>{{ row.avg_per_day }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
