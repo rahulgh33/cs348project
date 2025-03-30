@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Book Manager</title>
+</head>
+<body>
+  <h1>📚 Book Manager</h1>
+
+  <h2>Add Book</h2>
+  <form action="/add_book" method="post">
+    <input name="title" placeholder="Title" required><br>
+    <input name="pages" type="number" placeholder="Total Pages" required><br>
+    <select name="genre" required>
+      {% for genre in genres %}
+        <option value="{{ genre.id }}">{{ genre.name }}</option>
+      {% endfor %}
+    </select><br>
+    <button type="submit">Add Book</button>
+  </form>
+
+  <h2>Edit Book</h2>
+  <form action="/edit_book" method="post">
+    <select name="book_id">
+      {% for book in books %}
+        <option value="{{ book.id }}">{{ book.title }}</option>
+      {% endfor %}
+    </select><br>
+    <input name="title" placeholder="New Title" required><br>
+    <input name="pages" type="number" placeholder="New Total Pages" required><br>
+    <select name="genre" required>
+      {% for genre in genres %}
+        <option value="{{ genre.id }}">{{ genre.name }}</option>
+      {% endfor %}
+    </select><br>
+    <button type="submit">Update Book</button>
+  </form>
+
+  <h2>Delete Book</h2>
+  <form action="/delete_book" method="post">
+    <select name="book_id">
+      {% for book in books %}
+        <option value="{{ book.id }}">{{ book.title }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Delete Book</button>
+  </form>
+
+  <h2>Add Reading Log</h2>
+  <form action="/add_log" method="post">
+    <select name="book_id">
+      {% for book in books %}
+        <option value="{{ book.id }}">{{ book.title }}</option>
+      {% endfor %}
+    </select><br>
+    <input name="log_date" type="date" required><br>
+    <input name="pages_read" type="number" placeholder="Pages Read" required><br>
+    <button type="submit">Add Log</button>
+  </form>
+
+  <h2>View Report</h2>
+  <form action="/report" method="get">
+    <input type="date" name="start" required>
+    <input type="date" name="end" required>
+    <button type="submit">Generate Report</button>
+  </form>
+</body>
+</html>
