@@ -23,7 +23,7 @@ class Book(db.Model):
     pages = db.Column(db.Integer)
     genre_id = db.Column(db.Integer, db.ForeignKey('genre.id'))
     genre = db.relationship('Genre')
-    logs = db.relationship('ReadingLog', backref='book', cascade="all, delete-orphan")
+    logs = db.relationship('ReadingLog', backref='parent_book', cascade="all, delete-orphan")
 
 class ReadingLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
